@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Smart Prescription & Medication Tracker",
+  "description": "A digital prescription system integrated with AI to prevent medication errors, track adherence, and send dosage reminders. It allows doctors to securely issue prescriptions and pharmacies to validate them electronically.",
+  "requestFramePermissions": []
+}
