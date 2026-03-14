@@ -48,9 +48,9 @@ const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ user, onLogout }) => 
     }
 
     const newPrescription: Prescription = {
-      id: generateReferenceId(),
+      refId: generateReferenceId(),
       patientName,
-      patientAge: Number(patientAge),
+      age: Number(patientAge),
       disease,
       medicine,
       dosage: Number(dosage),
@@ -66,7 +66,7 @@ const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ user, onLogout }) => 
     const updatedPrescriptions = [...allPrescriptions, newPrescription];
     localStorage.setItem('prescriptions', JSON.stringify(updatedPrescriptions));
     setPrescriptions(prev => [...prev, newPrescription]);
-    alert(`Prescription generated with ID: ${newPrescription.id}`);
+    alert(`Prescription generated with ID: ${newPrescription.refId}`);
     clearForm();
   };
 
@@ -109,8 +109,8 @@ const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ user, onLogout }) => 
                 </thead>
                 <tbody>
                   {prescriptions.length > 0 ? prescriptions.map(p => (
-                    <tr key={p.id} className="border-b">
-                      <td className="px-4 py-3 font-mono">{p.id}</td>
+                    <tr key={p.refId} className="border-b">
+                      <td className="px-4 py-3 font-mono">{p.refId}</td>
                       <td className="px-4 py-3">{p.patientName}</td>
                       <td className="px-4 py-3">{p.medicine}</td>
                       <td className="px-4 py-3"><span className={`px-2 py-1 rounded-full text-xs font-medium ${p.status === 'Issued' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>{p.status}</span></td>

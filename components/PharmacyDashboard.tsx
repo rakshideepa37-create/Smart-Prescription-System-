@@ -17,7 +17,7 @@ const PharmacyDashboard: React.FC<PharmacyDashboardProps> = ({ user, onLogout })
     setError('');
     setPrescription(null);
     const allPrescriptions: Prescription[] = JSON.parse(localStorage.getItem('prescriptions') || '[]');
-    const found = allPrescriptions.find(p => p.id.toLowerCase() === searchId.toLowerCase());
+    const found = allPrescriptions.find(p => p.refId.toLowerCase() === searchId.toLowerCase());
     if (found) {
       setPrescription(found);
     } else {
@@ -29,7 +29,7 @@ const PharmacyDashboard: React.FC<PharmacyDashboardProps> = ({ user, onLogout })
       if (!prescription) return;
       const allPrescriptions: Prescription[] = JSON.parse(localStorage.getItem('prescriptions') || '[]');
       const updatedPrescriptions = allPrescriptions.map(p =>
-        p.id === prescription.id ? { ...p, status: 'Dispensed' as const } : p
+        p.refId === prescription.refId ? { ...p, status: 'Dispensed' as const } : p
       );
       localStorage.setItem('prescriptions', JSON.stringify(updatedPrescriptions));
       setPrescription({ ...prescription, status: 'Dispensed' });
@@ -60,8 +60,8 @@ const PharmacyDashboard: React.FC<PharmacyDashboardProps> = ({ user, onLogout })
                     <span className={`text-sm font-semibold px-3 py-1 rounded-full ${prescription.status === 'Issued' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>{prescription.status}</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-black">
-                    <p><strong>Reference ID:</strong> <span className="font-mono">{prescription.id}</span></p>
-                    <p><strong>Patient:</strong> {prescription.patientName} (Age: {prescription.patientAge})</p>
+                    <p><strong>Reference ID:</strong> <span className="font-mono">{prescription.refId}</span></p>
+                    <p><strong>Patient:</strong> {prescription.patientName} (Age: {prescription.age})</p>
                     <p><strong>Doctor:</strong> {prescription.doctorName}</p>
                     <p><strong>Disease:</strong> {prescription.disease}</p>
                     <p className="sm:col-span-2"><strong>Medicine:</strong> {prescription.medicine}</p>

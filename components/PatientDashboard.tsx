@@ -39,7 +39,7 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ user, onLogout }) =
     }
 
     setSelectedPrescription(prescription);
-    const existingTimes = reminderTimes[prescription.id] || [];
+    const existingTimes = reminderTimes[prescription.refId] || [];
     const initialTimes = Array.from({ length: prescription.frequency }, (_, i) => existingTimes[i] || '');
     setModalTimes(initialTimes);
     setIsModalOpen(true);
@@ -54,9 +54,9 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ user, onLogout }) =
         return;
     }
 
-    const { id, medicine } = selectedPrescription;
+    const { refId, medicine } = selectedPrescription;
 
-    const newReminderTimes = { ...reminderTimes, [id]: modalTimes };
+    const newReminderTimes = { ...reminderTimes, [refId]: modalTimes };
     setReminderTimes(newReminderTimes);
     localStorage.setItem('reminderTimes', JSON.stringify(newReminderTimes));
     alert('Reminders have been successfully set!');
@@ -77,7 +77,7 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ user, onLogout }) =
         if (Notification.permission === 'granted') {
           new Notification('Medication Reminder', {
             body: `It's time to take your ${medicine}.`,
-            tag: `med-reminder-${id}-${time}`
+            tag: `med-reminder-${refId}-${time}`
           });
         }
       }, delay);
@@ -91,7 +91,7 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ user, onLogout }) =
   const handleMarkAsTaken = (id: string) => {
     const allPrescriptions: Prescription[] = JSON.parse(localStorage.getItem('prescriptions') || '[]');
     const updatedPrescriptions = allPrescriptions.map(p => {
-      if (p.id === id) {
+      if (p.refId === id) {
         const totalDoses = p.frequency * p.duration;
         if (p.adherenceCount < totalDoses) {
           return { ...p, adherenceCount: p.adherenceCount + 1 };
@@ -112,17 +112,17 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ user, onLogout }) =
           {prescriptions.length > 0 ? prescriptions.map(p => {
             const totalDoses = p.frequency * p.duration;
             const adherencePercentage = totalDoses > 0 ? (p.adherenceCount / totalDoses) * 100 : 0;
-            const currentReminders = reminderTimes[p.id] || [];
+            const currentReminders = reminderTimes[p.refId] || [];
 
             return (
-              <div key={p.id} className="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
+              <div key={p.refId} className="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
                 <div>
                   <div className="flex justify-between items-start">
                     <h3 className="text-lg font-bold text-black">{p.medicine}</h3>
                     <span className={`text-xs font-semibold px-2 py-1 rounded-full ${p.status === 'Issued' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>{p.status}</span>
                   </div>
                   <p className="text-sm text-gray-500 mb-2">For: {p.disease}</p>
-                  <p className="text-sm font-mono text-gray-400 mb-4">{p.id}</p>
+                  <p className="text-sm font-mono text-gray-400 mb-4">{p.refId}</p>
                   <div className="text-sm space-y-1 text-black">
                     <p><strong>Dosage:</strong> {p.dosage} mg</p>
                     <p><strong>Frequency:</strong> {p.frequency} times/day</p>
@@ -142,7 +142,7 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ user, onLogout }) =
                 </div>
                 <div className="flex gap-2 mt-6">
                   <button onClick={() => handleOpenReminderModal(p)} className="w-full bg-gray-200 text-gray-800 text-sm font-bold py-2 px-4 rounded-md hover:bg-gray-300 transition">Set Reminder</button>
-                  <button onClick={() => handleMarkAsTaken(p.id)} disabled={p.adherenceCount >= totalDoses} className="w-full bg-[#2563EB] text-white text-sm font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition disabled:bg-gray-400">Mark as Taken</button>
+                  <button onClick={() => handleMarkAsTaken(p.refId)} disabled={p.adherenceCount >= totalDoses} className="w-full bg-[#2563EB] text-white text-sm font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition disabled:bg-gray-400">Mark as Taken</button>
                 </div>
               </div>
             );

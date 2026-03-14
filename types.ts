@@ -14,9 +14,9 @@ export interface User {
 }
 
 export interface Prescription {
-  id: string; // Reference ID
+  refId: string;
   patientName: string;
-  patientAge: number;
+  age: number;
   disease: string;
   medicine: string;
   dosage: number; // in mg
